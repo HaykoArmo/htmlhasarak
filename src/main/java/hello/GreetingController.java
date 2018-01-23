@@ -37,10 +37,13 @@ public class GreetingController {
         if (password.equals(password_repeat)) {
             System.out.println(first_name + " " + last_name + " " + email + " " + password + " " + password_repeat);
             userService.create(new User(first_name, last_name, email, password));
-            return "hello";
+            return "redirect:/login";
         } else {
             throw new IllegalArgumentException("repeat@ che hamapatasxanum passwordin");
         }
     }
-
+@RequestMapping(value="/login",method=RequestMethod.GET)
+public String login(){
+        return "login";
+}
 }

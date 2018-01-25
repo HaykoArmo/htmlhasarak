@@ -39,6 +39,8 @@ dependencies {
     compile('org.springframework:spring-aop')
 // https://mvnrepository.com/artifact/org.springframework/spring-webmvc
     compile group: 'org.springframework', name: 'spring-webmvc'
+// https://mvnrepository.com/artifact/com.google.guava/guava
+    compile group: 'com.google.guava', name: 'guava', version: '23.6-jre'
 
 }
 

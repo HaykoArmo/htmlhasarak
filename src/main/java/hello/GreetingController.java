@@ -1,11 +1,14 @@
 package hello;
 
+import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.nio.charset.StandardCharsets;
 
 @Controller
 public class GreetingController {
@@ -36,14 +39,24 @@ public class GreetingController {
                                @RequestParam("password_repeat") String password_repeat) {
         if (password.equals(password_repeat)) {
             System.out.println(first_name + " " + last_name + " " + email + " " + password + " " + password_repeat);
-            userService.create(new User(first_name, last_name, email, password));
+            final String hash = Hashing.sha256().hashString(password,
+                    StandardCharsets.UTF_8).toString();
+            userService.create(new User(first_name, last_name, email, hash));
             return "redirect:/login";
         } else {
             throw new IllegalArgumentException("repeat@ che hamapatasxanum passwordin");
         }
     }
-@RequestMapping(value="/login",method=RequestMethod.GET)
-public String login(){
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String loginget() {
         return "login";
-}
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String loginpost(@RequestParam("email") String email,
+                            @RequestParam("password") String password) {
+        System.out.println(userService.getByEmail(email));
+        return "redirect:/home";
+    }
 }

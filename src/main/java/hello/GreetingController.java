@@ -23,6 +23,7 @@ public class GreetingController {
 
     @RequestMapping("/hello")
     public String hello() {
+
         return "hello";
     }
 
@@ -38,7 +39,7 @@ public class GreetingController {
                                @RequestParam("password") String password,
                                @RequestParam("password_repeat") String password_repeat) {
         if (password.equals(password_repeat)) {
-            System.out.println(first_name + " " + last_name + " " + email + " " + password + " " + password_repeat);
+           // System.out.println(first_name + " " + last_name + " " + email + " " + password + " " + password_repeat);
             final String hash = Hashing.sha256().hashString(password,
                     StandardCharsets.UTF_8).toString();
             userService.create(new User(first_name, last_name, email, hash));
@@ -56,7 +57,23 @@ public class GreetingController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String loginpost(@RequestParam("email") String email,
                             @RequestParam("password") String password) {
-        System.out.println(userService.getByEmail(email));
-        return "redirect:/home";
+        if (userService.userExistByEmail(email)) {
+            User user = userService.getByEmail(email);
+            String h = user.getPassword();
+            password = Hashing.sha256().hashString(password,
+                    StandardCharsets.UTF_8).toString();
+            if (h.equals(password)) {
+                return "redirect:/home";
+            }
+
+        } else {
+            return "login";
+        }
+            return "login";
     }
+    @RequestMapping(value="home",method = RequestMethod.GET)
+    public String home(){
+        return "home";
+    }
+
 }

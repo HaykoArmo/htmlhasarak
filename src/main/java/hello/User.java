@@ -20,7 +20,7 @@ public class User {
         this.password = password;
     }
 
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String lastName;

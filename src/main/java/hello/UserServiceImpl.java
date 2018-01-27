@@ -5,17 +5,18 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Transactional
 @Repository
 public class UserServiceImpl implements UserService {
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public void create(User user) {
         entityManager.persist(user);
     }
-
 
 
     @Override
@@ -45,7 +46,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByEmail(String email) {
-        return entityManager.createQuery("from User where email=:email",User.class).setParameter("email",email).getSingleResult();
+        return entityManager.createQuery("from User where email=:email", User.class).setParameter("email", email).getSingleResult();
     }
 
+    @Override
+    public boolean userExistByEmail(String email) {
+        List<User> email1 = entityManager.createQuery("from " +
+                "  User where email=:email", User.class).
+                setParameter("email", email).getResultList();
+        return !email1.isEmpty();
+    }
 }

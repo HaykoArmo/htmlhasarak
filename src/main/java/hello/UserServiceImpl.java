@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByEmail(String email) {
-        return entityManager.createQuery("from User where email=:email", User.class).setParameter("email", email).getSingleResult();
+        return entityManager.createQuery("from User where email=:email",
+                User.class).setParameter("email", email).getSingleResult();
     }
 
     @Override
@@ -55,5 +56,12 @@ public class UserServiceImpl implements UserService {
                 "  User where email=:email", User.class).
                 setParameter("email", email).getResultList();
         return !email1.isEmpty();
+    }
+
+    @Override
+    public List<User> getAllusers() {
+       List <User> list=entityManager.createQuery("from User ",
+               User.class).getResultList();
+        return list;
     }
 }
